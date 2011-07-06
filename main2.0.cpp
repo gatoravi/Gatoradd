@@ -1,6 +1,5 @@
-/* STEM MRCA Version 1
+/* CROWN MRCA Version 1
  * Written by Avinash using Andre Wehe's Library Feb 11 2011
- * sample usage -  ./exec tree_file leaves_file replicates opfile
  * This is a program to add taxa of specified family to a tree .
  * usage - ./executable initial_tree_file leaves_families_file no_of_replicates opfile_name 
  * THE CROWN cannot have leaves with the same ancestors

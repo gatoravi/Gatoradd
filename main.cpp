@@ -1,9 +1,8 @@
 /* STEM MRCA Version 1
  * Written by Avinash using Andre Wehe's Library Feb 11 2011
- * sample usage -  ./exec tree_file leaves_file replicates opfile
- * This is a program to add taxa of specified family to a tree .
+ * program to add taxa of a specified family to a tree .
  * usage - ./executable initial_tree_file leaves_families_file no_of_replicates opfile_name 
- * THE CROWN cannot have leaves with the same ancestors
+ * THE CROWN cannot add leaves which have the same two ancestors for i.e leaf1 anc1 anc1 is not allowed
  */
 extern const char *builddate;
 #include "common.h"
@@ -234,7 +233,7 @@ int main(int argc, char* argv[]) {
       do {
 	rnum = rand() % templc;
 	random_leaf = leafindex[rnum];      
-      }while(added_leaf[random_leaf]==ADDED);
+      } while(added_leaf[random_leaf]==ADDED);
    
       added_leaf[random_leaf] = ADDED;
       //cout<<"\nLeaf Number "<<random_leaf+1; // leaf numbers 1 to n
