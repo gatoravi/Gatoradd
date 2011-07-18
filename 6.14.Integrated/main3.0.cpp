@@ -1,5 +1,5 @@
 /* STEM MRCA Version 1
- * Author - Avinash Ramu using Andre Wehe's TREE Library, Feb 11 2011
+ * Written by Avinash using Andre Wehe's Library Feb 11 2011
  * sample usage -  ./exec tree_file leaves_file replicates opfile
  * This is a program to add taxa of specified family to a tree depending on branch lengths at all edges including stem.
  * usage - ./executable initial_tree_file leaves_families_file no_of_replicates opfile_name 
@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
   srand(time(NULL));
   
   //ADD OPTION types
-  enum{CROWN, STEM, FAM_CROWN, FAM_STEM};
+  enum{FAMILY, CROWN, STEM};
   
   /* Read in command line arguments */
   char* treefile = argv[1];
@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
   //cout<<"\nOutput : "<<os.str()<<endl;
   
   /* Create a set of all species families */
-  //set<string> families;
+  set<string> families;
   
   /* Set the maximum total number of leaves */
   unsigned int max_total_nodes = 2*(MAX_TREE_SIZE + MAX_LEAF_ADD -1);
@@ -205,12 +205,6 @@ int main(int argc, char* argv[]) {
     cout<<" cumul length "<<bl_array[i];
     }*/
   
-  //Map of left and right base taxa for adding each taxa
-  //map<std::string, std::string>left;
-  //map<std::string, std::string>left;
-  
-  //Map of family for taxa
-  map<std::string, std::string>families;
   
   
   /* Create an array to store the lca values of individual nodes */
@@ -256,16 +250,15 @@ int main(int argc, char* argv[]) {
         std::cout<<"Invalid Input for : "<<token1<<"Exiting !\n";
         exit(1);
       }
-      //RANDOM
+      
       else if(token2 == "RANDOM") {
         cout<<"\nRANDOM option";
-        ADDoption[leafcount] = CROWN;//anywhere within the tree, so mark it as CROWN
+        ADDoption[leafcount] = CROWN;//anywhere within the tree
         taxa = token1;
         anc1 = initial_t.root;
         anc2 = initial_t.root; 
       } 
       
-      //FAMILY
       else if(token3 == "" || token3 == "CROWN" || token3 == "STEM") {//only two tokens -> FAMILY option
         taxa = token1;
         familyName = token2;
@@ -273,11 +266,11 @@ int main(int argc, char* argv[]) {
         //select ADDoption, default is STEM
         if(token3 == "CROWN") {
           cout<<"\nFAMILY CROWN option";
-          ADDoption[leafcount] = FAM_CROWN;
+          ADDoption[leafcount] = CROWN;
         }
         else {
           cout<<"\nFAMILY STEM option";
-          ADDoption[leafcount] = FAM_STEM;
+          ADDoption[leafcount] = STEM;
         }
         
         //int familyLen = familyName.length();
@@ -285,31 +278,9 @@ int main(int argc, char* argv[]) {
         //ADDoption[leafcount] = FAMILY;
         //cout<<"\nfamily ADD";
         
-        /*int max = 0;
+        int max = 0;
         int min = numeric_limits<int>::max();
-        TREE_INORDER2(k,t){
-          cout<<t_name[k.idx];
-          string leaf = t_name[k.idx];
-          size_t found = leaf.find(family);
-          if (found !=string::npos) {
-          
-            cout<<"\n FAMILY MATCH taxon is "<<leaves[i];
-            
-            if(flag == 0) {
-              left = k.idx;
-              flag = 1;
-            }
-            
-            else {
-              right = k.idx;
-            }
-            
-          }
-        }
-        if(flag == 0) {
-          cout<<"FAMILY "<<family<<" NOT FOUND! EXITING ! \n";
-          exit(1);
-        }*/
+        
         //Find the two end taxa for this leaf-family 
         /*for(unsigned int i=0; i<leaves.size(); i++) {
           //string leaf = leaves[i];
@@ -357,44 +328,21 @@ int main(int argc, char* argv[]) {
       
         
       }
-      //CROWN
-      else if (token4 == "CROWN" || token4 == "crown") { 
+      else if (token4 == "CROWN" || token4 == "crown") { //CROWN
          taxa = token1;
          anc1 = token2;
          anc2 = token3; 
          ADDoption[leafcount] = CROWN;
-         /* Get the IDs of the current leaf's ancestors*/
-         int anc1_id = name2id[anc1];
-         int anc2_id = name2id[anc2];
-         /* Find the MRCA of the ancestors of curr leaf */
-         int root = lca.lca(anc1_id, anc2_id);
-         //Point the leaf to the index in the lca array */
-         initial_leaf_lca_array_index[leafcount] = root;
-         /* Store the value of lca in the lca array at specified index */
-         initial_lca_array[root] = root; //This will be modified later if the new leaf is added to the stem of this family
          cout<<"\nCROWN";
       }
-      // STEM
-      else {
+      else {// STEM
          taxa = token1;
          anc1 = token2;
          anc2 = token3; 
          ADDoption[leafcount] = STEM;
-         /* Get the IDs of the current leaf's ancestors*/
-         int anc1_id = name2id[anc1];
-         int anc2_id = name2id[anc2];
-         /* Find the MRCA of the ancestors of curr leaf */
-         int root = lca.lca(anc1_id, anc2_id);
-         //Point the leaf to the index in the lca array */
-         initial_leaf_lca_array_index[leafcount] = root;
-         /* Store the value of lca in the lca array at specified index */
-         initial_lca_array[root] = root; //This will be modified later if the new leaf is added to the stem of this family
          cout<<"\nSTEM";
       }
       
-      /* Store the leaf label */
-      leaves_array[leafcount] = taxa;
-      leaves.push_back(taxa);
       
       
       //if(family_iterator.second) {
@@ -403,21 +351,29 @@ int main(int argc, char* argv[]) {
         //cout<<"\nOld !!"<<leafcount;
       //}
       
+      /* Get the IDs of the current leaf's ancestors*/
+      int anc1_id = name2id[anc1];
+      int anc2_id = name2id[anc2];
+      
       
       /*Identify families with single taxa */
       
       
       /* Find the MRCA of the ancestors of curr leaf */
-      //int root = lca.lca(anc1_id, anc2_id);
+      int root = lca.lca(anc1_id, anc2_id);
       //cout<<endl<<"The MRCA of curr leaf anc is: "<<lca_id;
-            
+      
+      /* Store the leaf label */
+      leaves_array[leafcount] = taxa;
+      leaves.push_back(taxa);
+      
       /* Point the leaf to the index in the lca array */
-      //initial_leaf_lca_array_index[leafcount++] = root;
+      initial_leaf_lca_array_index[leafcount++] = root;
       
       /* Store the value of lca in the lca array at specified index */
-      //initial_lca_array[root] = root; //This will be modified later if the new leaf is added to the stem of this family
+      initial_lca_array[root] = root; //This will be modified later if the new leaf is added to the stem of this family
            
-      /*cout<<"\nLeaf number "<<leafcount+1<<" anc1_id is: "<<anc1_id<<" anc2_id is: "<<anc2_id<<" lca "<<root;
+      cout<<"\nLeaf number "<<leafcount+1<<" anc1_id is: "<<anc1_id<<" anc2_id is: "<<anc2_id<<" lca "<<root;
       if(anc1_id == anc2_id) {
         cout<<" same 2 Ancestors.";
         //exit(1);
@@ -425,7 +381,7 @@ int main(int argc, char* argv[]) {
       if(root == 0) {
         cout<<" LCA is root !\n";
         //exit(2);
-      }*/
+      }
       
       
       /*Identify families with single taxa */
@@ -436,11 +392,7 @@ int main(int argc, char* argv[]) {
       //} 
       //else 
         //single_taxa_family[leafcount] = false;
-      
-      
-      
-      leafcount++;
-      
+        
       /* Read the next leaf */
       getline(ifs2 ,current_leaf);
       
@@ -504,7 +456,14 @@ int main(int argc, char* argv[]) {
       cout<<"\nleafnumber "<<j+1;
       //int wait;
       //cin>>wait;
-           
+      
+      if( ADDoption[j] == STEM ) {
+        cout<<"\nSTEM";
+      }
+      else if ( ADDoption[j] == CROWN ) {
+        cout<<"\nCROWN";
+      }
+      
       int random_leaf;
       int rnum;
       
@@ -518,7 +477,7 @@ int main(int argc, char* argv[]) {
 	//cout<<"\nleafcount"<<leafcount;
 	//cout<<endl<<"rnum "<<rnum<<"random "<<random_leaf<<endl<<"  "<<"added y/n "<<added_leaf[random_leaf];
 	//cout<<"chk";
-      } while(added_leaf[random_leaf]==ADDED);
+      }while(added_leaf[random_leaf]==ADDED);
    
       added_leaf[random_leaf] = ADDED;//mark leaf as added
       //cout<<"\nLeaf Number "<<random_leaf+1; // leaf numbers 1 to n
@@ -526,70 +485,15 @@ int main(int argc, char* argv[]) {
       /* shift leaf array */
       leafindex[rnum] = leafindex[templc-1];
       templc--;
-      string newleaf = leaves_array[random_leaf];      
+      string newleaf = leaves_array[random_leaf];
       
-      //root of subtree to insert new taxa in
-      int subtree_root_node;
-      unsigned int subtree_root_node_parent;
-      
-      if( ADDoption[random_leaf] == STEM ) {
-        cout<<"\nSTEM";         
-        int lca_id_index = leaf_lca_array_index[random_leaf];
-        subtree_root_node = lca_array[lca_id_index];        
-      }
-      else if ( ADDoption[random_leaf] == CROWN ) {
-        cout<<"\nCROWN";
-        int lca_id_index = leaf_lca_array_index[random_leaf];
-        subtree_root_node = lca_array[lca_id_index];
-      }
-      
-      else if ( ADDoption[random_leaf] == FAM_CROWN || ADDoption[random_leaf] == FAM_STEM ) {
-        
-        cout<<"\nFAMILY";
-        string family = families[newleaf];
-        int flag = 0, left, right;
-        ///LETS FIND LCA HERE      
-        TREE_INORDER2(k,t){
-          cout<<t_name[k.idx];
-          string leaf = t_name[k.idx];
-          size_t found = leaf.find(family);
-          if (found !=string::npos) {
-          
-            cout<<"\n FAMILY MATCH taxon is "<<leaf;
-            
-            if(flag == 0) {
-              left = k.idx;
-              flag = 1;
-            }
-            
-            else {
-              right = k.idx;
-            }
-            
-          }
-        }
-        
-        /* Find the MRCA of the ancestors of curr leaf */
-        /* Create an lca object to find lcas of nodes. */
-        aw::LCA lca;
-        lca.create(t);
-        subtree_root_node = lca.lca(left, right);
-        subtree_root_node_parent = parent_array[subtree_root_node];
-        
-      }
-      
-      
-      
-      
-      
-      
-      ///* Get the MRCA of the current leaves ancestors */
-      //int lca_id_index = leaf_lca_array_index[random_leaf];
-      //int lca_id = lca_array[lca_id_index];
+      /* Get the MRCA of the current leaves ancestors */
+      int lca_id_index = leaf_lca_array_index[random_leaf];
+      int lca_id = lca_array[lca_id_index];
       
       /* The root of the family subtree is the lca of the two leaves in the ip file */
-      //unsigned int subtree_root_node = lca_id;
-     
+      unsigned int subtree_root_node = lca_id;
+      unsigned int subtree_root_node_parent = parent_array[lca_id];
       //cout<<endl<<"\nCurrent leaf "<<j+1<<" family subtree root is "<<subtree_root_node<<" root parent is "<<subtree_root_node_parent<<endl;
       
       /* Calculate the branch length of the curr family subtree */
@@ -606,13 +510,13 @@ int main(int argc, char* argv[]) {
 	//cout<<"\nNode "<<current_node<<" Branch Length: "<<t_weight[current_node][0];
 	curr_subtree_bl += t_weight[current_node][0];
 	translate_index[subtree_nodecount] = current_node;
-	bl_array[subtree_nodecount++] = curr_subtree_bl;
-      }
+	bl_array[subtree_nodecount++] = curr_subtree_bl;                
+      }          
       
       /* Select a random branch length and edge */
       //cout<<"\ncurr_subtree_bl = "<<curr_subtree_bl;
       int untranslated_node;
-      int selected_edge; //edge where to add the random leaf
+      unsigned int selected_edge; //edge where to add the random leaf
       double randomblength;
       do {
 	randomblength = (double)rand() * (double)curr_subtree_bl / (double)RAND_MAX; 
@@ -622,11 +526,11 @@ int main(int argc, char* argv[]) {
 	selected_edge = translate_index[untranslated_node];   
 	
 	//Check for root of tree/subtree
-	if(selected_edge == (signed)t.root) { //STEM option
+	if(selected_edge == t.root) { //STEM option
 	  cout<<"\nSelected Root ! continuing !";
 	  continue;
 	}
-	else if ( (selected_edge == subtree_root_node) && ( ADDoption[j] == CROWN || ADDoption[j] == FAM_CROWN) ) { //CROWN option
+	else if ( selected_edge == subtree_root_node && ADDoption[j] == CROWN ) { //CROWN option
 	  cout<<"\nSelected subtree root ( not allowed for CROWN ) ! continuing !";
 	  continue;
 	}
@@ -667,12 +571,11 @@ int main(int argc, char* argv[]) {
       t_name[l_n] = newleaf;
       parent_array[l_n] = i_n;
       
-      /* Change LCA ARRAY if selected edge is the root i.e STEM CASE*/
-      if(selected_edge == subtree_root_node && ADDoption[random_leaf] == STEM) {
+      /* Change lca if selected edge is the root i.e STEM CASE*/
+      if(selected_edge == subtree_root_node ) {
         //cout<<"   CHANGING LCA !!";
         lca_array[subtree_root_node] = i_n;
       }
-      
       /* Print single taxa family leaves */
       //if(single_taxa_family[random_leaf] == true) {
         //cout<<"\nSingle taxa family! selected edge = "<<selected_edge;
