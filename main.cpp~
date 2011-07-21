@@ -1,9 +1,16 @@
 /* STEM MRCA Version 1
  * Written by Avinash using Andre Wehe's Library Feb 11 2011
+<<<<<<< HEAD
  * program to add taxa of a specified family to a tree .
  * usage - ./executable initial_tree_file leaves_families_file no_of_replicates opfile_name 
  * The crown cannot add leaves which have the same two ancestors for i.e leaf1 anc1 anc1 is not allowed
  */
+=======
+ * sample usage -  ./exec tree_file leaves_file replicates opfile
+ * This is a program to add taxa of specified family to a tree .
+ * usage - ./executable initial_tree_file leaves_families_file no_of_replicates opfile_name 
+*/
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
 extern const char *builddate;
 #include "common.h"
 #include "argument.h"
@@ -78,6 +85,7 @@ int main(int argc, char* argv[]) {
   /* Create a set of all families */
   set<string> family_set;
   
+<<<<<<< HEAD
   /* Max number of nodes in final tree */
   int max_total_nodes = 2*(MAXTREETAXA + MAXADDLEAF -1);
   
@@ -87,6 +95,14 @@ int main(int argc, char* argv[]) {
   //double total_blength = 0;
   
   /* Initial number of leaves and internal nodes */
+=======
+  
+  int max_total_nodes = 2*(MAXTREETAXA + MAXADDLEAF -1);
+  
+  int*    initial_parent_array = new int[max_total_nodes];
+  unsigned int* translate_index = new unsigned int[max_total_nodes];
+  //double total_blength = 0;
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
   int leafn = 0;
   int initial_currnodecount = 0;
     
@@ -94,38 +110,86 @@ int main(int argc, char* argv[]) {
   map<std::string, int> name2id_map;
   
   /* Traverse the tree to create parents array  */
+<<<<<<< HEAD
   //cout<<"\n POST ORDER ";
   TREE_POSTORDER2(k,initial_t){
     unsigned int currnode = k.idx;
     //cout<<"\nNode "<<currnode<<" "<<initial_t_name[currnode];
+=======
+  cout<<"\n POST ORDER ";
+  TREE_POSTORDER2(k,initial_t){
+    unsigned int currnode = k.idx;
+    cout<<"\nNode "<<currnode<<" "<<initial_t_name[currnode];
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
     //cout<<" is "<<t_weight[currnode][0];    
     //total_blength += t_weight[currnode][0]; 
     //translate_index[currnodecount] = currnode;
     //if(currnode != t.root)
+<<<<<<< HEAD
     //bl_array[currnodecount] = total_blength;//this array stores cumulative branch lengths & hence is sorted.
     if(initial_t.is_leaf(currnode)) {
       name2id_map[initial_t_name[currnode]] = currnode;
       leafn++;
       //cout<<endl<<t_name[currnode];
+=======
+      //bl_array[currnodecount] = total_blength;//this array stores cumulative branch lengths & hence is sorted.
+    if(initial_t.is_leaf(currnode)) {
+        name2id_map[initial_t_name[currnode]] = currnode;
+        leafn++;
+        //cout<<endl<<t_name[currnode];
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
     }    
     initial_currnodecount++;
     initial_parent_array[currnode] = k.parent;     
   } 
   cout<<"\nThe number of leaves in the initial tree is "<<leafn;
+<<<<<<< HEAD
   //cout<<"\nThe number of internal nodes in the initial tree is "<<initial_currnodecount;
     
+=======
+  cout<<"\nThe number of internal nodes in the initial tree is "<<initial_currnodecount;
+  
+  /*
+  show content of the map 
+  map<std::string, int>::iterator it;
+  string temp;
+  for ( it=name2id_map.begin() ; it != name2id_map.end(); it++ ) {
+    cout << (*it).first << " => " << (*it).second << endl;
+    temp = (*it).first;
+  }
+  */
+ 
+  
+  /*cout<<"\n\nBEFORE ADDITION\n\n";
+  for(int i=0; i<currnodecount-1; i++){
+    int translate = translate_index[i]; 
+    cout<<"\nbranch number "<<translate;
+    if(i!=0)cout<<" length "<<bl_array[i] - bl_array[i-1];
+    else cout<<" length "<<bl_array[i];
+    cout<<" cumul length "<<bl_array[i];
+  }*/
+  
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
   /* Create an lca object to find lcas of nodes. */
   aw::LCA lca;
   lca.create(initial_t);
   
   /* Create an array to store the lca values of induv nodes */
   int leaf_lca_array[MAXADDLEAF];
+<<<<<<< HEAD
+=======
+  bool single_taxa_family[MAXADDLEAF];
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
   string leaves_array[MAXADDLEAF];
   
   /* Read in leaves to be added from file */
   int leafcount = 0;  //number of leaves to be added.
   std::ifstream ifs2(leaves_file);
   string current_leaf;
+<<<<<<< HEAD
+=======
+  int same = 0;
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
   if(ifs2.is_open()){
     getline(ifs2 ,current_leaf);
     string taxa, anc1, anc2;
@@ -153,9 +217,17 @@ int main(int argc, char* argv[]) {
       
       /*Identify families with single taxa */
       if(anc1_id == anc2_id) {
+<<<<<<< HEAD
         cout<<"\nLEAF "<<leafcount+1<<" has same 2 Ancestors. Incorrect Input Specification. Exiting\n";
         exit(1);
       } 
+=======
+        single_taxa_family[leafcount] = true;
+        same++;
+      } 
+      else 
+        single_taxa_family[leafcount] = false;
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
       
       /* Find the MRCA of the ancestors of curr leaf */
       int lca_id = lca.lca(anc1_id, anc2_id);
@@ -164,6 +236,7 @@ int main(int argc, char* argv[]) {
       /* Store the leaf label */
       leaves_array[leafcount] = taxa;
       
+<<<<<<< HEAD
        /* Store the lca in the array */
       leaf_lca_array[leafcount++] = lca_id;
       cout<<endl<<leafcount<<" anc1_id is: "<<anc1_id<<" anc2_id is: "<<anc2_id<<" lca "<<lca_id;
@@ -172,10 +245,16 @@ int main(int argc, char* argv[]) {
         exit(2);
       }
             
+=======
+      /* Store the lca in the array */
+      leaf_lca_array[leafcount++] = lca_id;
+      
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
       /* Read the next leaf */
       getline(ifs2 ,current_leaf);
       
     } 
+<<<<<<< HEAD
   } 
   else {
     cout<<"\nUnable to open leaves to be added file !";
@@ -228,12 +307,75 @@ int main(int argc, char* argv[]) {
     }
       
     for(int j=0; j<leafcount; j++) {
+=======
+   } 
+   else {
+    cout<<"\nUnable to open leaves to be added file !";
+    exit(1);
+   }
+   
+    
+    cout<<"\nThe number of leaves to be added is "<<leafcount;
+    cout<<"\nThe number of replicates is "<<replicates;  
+    cout<<"\nInitial number of nodes is "<<initial_currnodecount;
+      
+    /* CREATE REPLICATES OF NEW  TREE */
+    for(int k=0; k<replicates; k++) {
+    
+      int currnodecount = initial_currnodecount;
+      //cout<<"Initial curr node count is: "<<currnodecount;
+      //double total_blength = total_blength_initial;
+      cout<<"\n\nReplicate number : "<<k+1;
+      //cout<<"\nThe total branch length is "<<total_blength;
+      //double* bl_array = new double[total_nodes];
+      int* parent_array = new int[max_total_nodes];
+      int* leafindex  = new int[leafcount]; 
+      int* added_leaf = new int[leafcount]; 
+      //unsigned int* translate_index = new unsigned int[total_nodes];
+      
+      /* Copy the initial parent array and translate array */
+      for(int i=0; i<currnodecount; i++) {
+        //translate_index[i] = translate_index_initial[i];
+        parent_array[i] = initial_parent_array[i];
+        //bl_array[i] = bl_array_initial[i];
+      }
+  
+      /* Declare tree, labels & weights */
+      aw::Tree t = initial_t;
+      aw::idx2name t_name = initial_t_name;
+      aw::idx2weight_double t_weight = initial_t_weight;
+    
+      //aw::Tree t;
+      //aw::idx2name t_name;
+      //aw::idx2weight_double t_weight;
+      //aw::stream2tree(ifs, t, t_name, t_weight);
+      
+      /* Number of leaves left to be added */
+      int templc = leafcount;
+      
+      /* Initialise all leaves as not added and copy leaf indices */
+      for(int j=0; j<leafcount; j++) {
+        leafindex[j] = j;
+        added_leaf[j] = NOTADDED;
+      }
+      
+      for(int j=0; j<leafcount; j++) {
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
       int random_leaf;
       int rnum;
       do {
 	rnum = rand() % templc;
 	random_leaf = leafindex[rnum];      
+<<<<<<< HEAD
       } while(added_leaf[random_leaf]==ADDED);
+=======
+	//cout<<"\nj"<<j;
+	//cout<<"\nTEMPLC"<<templc;
+	//cout<<"\nleafcount"<<leafcount;
+	//cout<<endl<<"rnum "<<rnum<<"random "<<random_leaf<<endl<<" "<<"added y/n "<<added_leaf[random_leaf];
+	//cout<<"chk";
+      }while(added_leaf[random_leaf]==ADDED);
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
    
       added_leaf[random_leaf] = ADDED;
       //cout<<"\nLeaf Number "<<random_leaf+1; // leaf numbers 1 to n
@@ -246,6 +388,7 @@ int main(int argc, char* argv[]) {
       /* Get the MRCA of the current leaves ancestors */
       int lca_id = leaf_lca_array[random_leaf];
       
+<<<<<<< HEAD
       /* Find the root and parent of root of current subtree */
       unsigned int subtree_root_node = lca_id;
       unsigned int subtree_root_node_parent = parent_array[lca_id];
@@ -269,11 +412,32 @@ int main(int argc, char* argv[]) {
       //cout<<"\ncurr_subtree_bl = "<<curr_subtree_bl;
       
       /* Select a random value and find corresponding edge */
+=======
+      unsigned int subtree_root_node = lca_id;
+      unsigned int subtree_root_node_parent = parent_array[lca_id];
+      cout<<endl<<"\nCurrent leaf family subtree root is "<<subtree_root_node;
+      cout<<"\nCurrent leaf family subtree root parent is "<<subtree_root_node_parent<<endl;
+      double curr_subtree_bl = 0;
+      cout<<"\nTraversal for current leaf's subtree leafnumber: "<<leafcount<<" leafname "<<newleaf;
+      int subtree_nodecount = 0;
+      double* bl_array = new double[max_total_nodes];
+      /*Traverse the subtree of current leaf */
+      for (aw::Tree::iterator_postorder v=t.begin_postorder(subtree_root_node,subtree_root_node_parent),vEE=t.end_postorder(); v!=vEE; ++v) {
+                unsigned int current_node = v.idx;
+                cout<<"\nNode "<<current_node<<" Branch Length: "<<t_weight[current_node][0];
+                curr_subtree_bl += t_weight[current_node][0];
+                translate_index[subtree_nodecount] = current_node;
+                bl_array[subtree_nodecount++] = curr_subtree_bl;                
+      }          
+      
+      cout<<"\ncurr_subtree_bl = "<<curr_subtree_bl;
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
       int untranslated_node;
       unsigned int selected_edge;
       double randomblength;
       do{
         randomblength = (double)rand() * (double)curr_subtree_bl / (double)RAND_MAX; 
+<<<<<<< HEAD
         //cout<<"\nRandomblength is "<<randomblength;
         untranslated_node = binarysearch(bl_array, subtree_nodecount, randomblength);
         //cout<<"\nEdge : "<<untranslated_node<<" Translated: "<<translate_index[untranslated_node]; 
@@ -300,6 +464,38 @@ int main(int argc, char* argv[]) {
       /* change length of branch where inserted */
       t_weight[selected_edge][0] = randomblength;
             
+=======
+        cout<<"\nRandomblength is "<<randomblength;
+        untranslated_node = binarysearch(bl_array, subtree_nodecount, randomblength);
+        cout<<"\nEdge : "<<untranslated_node<<" Translated: "<<translate_index[untranslated_node]; 
+        selected_edge = translate_index[untranslated_node];         
+      }while(selected_edge == subtree_root_node && selected_edge == t.root);
+      
+      
+      for(int i=0; i<subtree_nodecount; i++){
+        cout<<"\ncumul branch length "<<i<<" "<<bl_array[i];
+        if(i!=0)cout<<" actual length "<<bl_array[i] - bl_array[i-1];
+      }
+      
+      cout<<"\nedge where to add "<<selected_edge;
+      cout<<"\nuntranslated_node "<<untranslated_node;
+      
+      double original_length;
+      
+      /* obtain the individual lengths by subtracting the cumulative lengths */
+      original_length = bl_array[untranslated_node] - bl_array[untranslated_node-1];
+      randomblength = randomblength - bl_array[untranslated_node-1];
+      double reduce_length =   original_length - randomblength; 
+      cout<<"\nOriginal Length "<<original_length;
+      cout<<"\nrandomblength "<<randomblength;
+      cout<<"\nreduce_length "<<reduce_length;
+      
+      
+      /* change length of branch where inserted */
+      t_weight[selected_edge][0] = randomblength;
+      
+      
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
       /* insert new internal node to attach new leaf */
       unsigned int i_n = t.new_node();
       t_weight[i_n][0] = reduce_length;    
@@ -311,6 +507,7 @@ int main(int argc, char* argv[]) {
       t_name[l_n] = newleaf; 
       parent_array[l_n] = i_n;
       
+<<<<<<< HEAD
             
       /* remove the edge b/w selected node and parent */
       unsigned int current_parent = parent_array[selected_edge];
@@ -343,12 +540,58 @@ int main(int argc, char* argv[]) {
 	//cout<<"\nWeight for node "<<currnode<<" "<<t_name[currnode];
 	//cout<<" is "<< t_weight[currnode][0];        
       //}   
+=======
+      
+       /* remove the edge b/w selected node and parent */
+      unsigned int current_parent = parent_array[selected_edge];
+      //cout<<"\nCurrent parent "<<current_parent<<" insert branch "<<selected_edge;
+      t.remove_edge(current_parent, selected_edge); 
+      
+      
+      //cout<<"\nnot root selected";
+      //cout<<"\nThe parent is : "<<parent;	      
+     
+      /* add an edge b/w new leaf and new internal */       
+      t.add_edge(i_n, l_n);
+      
+    
+      /* add an edge b/w new internal and selected node */
+      t.add_edge(i_n, selected_edge);
+      parent_array[selected_edge] = i_n;
+      
+    
+      /* assign parent of new internal to old parent of selected */
+      t.add_edge(i_n, current_parent);
+      parent_array[i_n] = current_parent;
+       
+      unsigned int edgec = t.edge_size();
+      unsigned int  nodec = t.node_size();
+      
+      cout<<"\nCurrent number of edges is "<<edgec;
+      cout<<"\nCurrent number of nodes is "<<nodec;
+      
+      /* Output tree to verify */
+      TREE_POSTORDER2(k,t){
+	unsigned int currnode = k.idx;
+	cout<<"\nWeight for node "<<currnode<<" "<<t_name[currnode];
+	cout<<" is "<< t_weight[currnode][0];    
+	//total_blength += t_weight[currnode][0]; 
+	//translate_index[currnodecount] = currnode;
+	//if(currnode!=t.root)
+	  //bl_array[currnodecount++] = total_blength;//this array stores cumulative branch lengths & hence is sorted.
+	//if(t.is_leaf(k.idx)){
+        //leafn++;
+	//}
+	//parent_array[currnode] = k.parent;     
+      }   
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
       //int wait;
       //cin>>wait;
       delete [] bl_array; 
       
          
     }
+<<<<<<< HEAD
     //ostringstream os;
     //aw::tree2newick(os, t, t_name, t_weight);
     //cout<<"\nOutput : "<<os.str()<<endl;
@@ -368,6 +611,19 @@ int main(int argc, char* argv[]) {
     delete[] parent_array;
     delete[] leafindex; 
     delete[] added_leaf;
+=======
+   ostringstream os;
+   aw::tree2newick(os, t, t_name, t_weight);
+   cout<<"\nOutput : "<<os.str()<<endl;
+   
+   aw::tree2newick(ofs, t, t_name, t_weight);
+   ofs<<endl;
+   //cout<<"\nThe new total branch length is: "<<total_blength;
+   
+   delete[] parent_array;
+   delete[] leafindex; 
+   delete[] added_leaf;
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
   }
 
   delete [] initial_parent_array; 
@@ -379,6 +635,7 @@ int main(int argc, char* argv[]) {
   
 }  
 
+<<<<<<< HEAD
 /* Find the edge where to add the leaf based on random value */
 int binarysearch(double *larray, int size, double key){
   int first = 0;
@@ -386,6 +643,15 @@ int binarysearch(double *larray, int size, double key){
   //cout<<"\nSize of array "<<size<<" key "<<key<<" last "<<last;
   if(size == 1) {
     return 0;
+=======
+
+int binarysearch(double *larray, int size, double key){
+  int first = 0;
+  int last = size-1;
+  cout<<"\nSize of array "<<size<<" key "<<key<<" last "<<last;
+  if(size == 1) {
+   return 0;
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
   }
   
   while (first <= last) {
@@ -398,7 +664,12 @@ int binarysearch(double *larray, int size, double key){
     else{
       //cout<<"\nReturned value: "<<mid+1;
       return mid+1;     // found it. return position 
+<<<<<<< HEAD
     }           
+=======
+    }
+           
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
   }
   return 0;
 }

@@ -301,7 +301,11 @@ class TreeTemplate {
         return true;
     }
 
+<<<<<<< HEAD
     // number of edges in the tree
+=======
+    // number of edges int the tree
+>>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
     public: inline unsigned int edge_size() { return edge_count; }
     // number of nodes in the tree
     public: inline unsigned int node_size() { return nodes23.size(); }
