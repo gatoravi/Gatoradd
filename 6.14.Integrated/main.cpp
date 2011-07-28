@@ -41,7 +41,7 @@ extern const char *builddate;
 #define MAX_FAMILY 2000
 
 using namespace std;
-int binarysearch(double *larray, int size, double key);
+int binarysearch(double *BLs, int size, double key);
 
 int main(int argc, char* argv[]) { 
   
@@ -412,7 +412,8 @@ int main(int argc, char* argv[]) {
       
       // Store branch lengths of current subtree
       double* bl_array = new double[MAX_TOTAL_NODES];
-      int subtree_nodecount = 0;
+      int subtree_nodecount = 1;
+      bl_array[0] = 0; // Add the branch lengths from first element
       
       // Traverse the subtree of current family 
       for (aw::Tree::iterator_postorder v=t.begin_postorder(subtree_root,subtree_root_parent),vEE=t.end_postorder(); v!=vEE; ++v) {
@@ -433,6 +434,10 @@ int main(int argc, char* argv[]) {
 	randomblength = (double)rand() * (double)subtree_bl / (double)RAND_MAX; 
 	//cout<<"\nRandomblength is "<<randomblength;
 	untranslated_node = binarysearch( bl_array, subtree_nodecount, randomblength);
+	if ( untranslated_node < 1 || untranslated_node > subtree_nodecount ) {
+	  cout<<"\nERROR 43x! Exiting !";
+	  exit(1);
+	}
 	//cout<<"\nEdge : "<<untranslated_node<<" Translated: "<<translate_index[untranslated_node]; 
 	selected_edge = translate_index[untranslated_node];
 	
@@ -448,17 +453,24 @@ int main(int argc, char* argv[]) {
 	  continue;
 	}
 	
-	else {
-	  break;
-	}
+	break;
 	
       } while(1);
             
-            
+      //cout<<"\nUntranslated Edge "<<untranslated_node<<"max nodes "<<MAX_TOTAL_NODES;
+      
       // Obtain the individual lengths by subtracting the cumulative lengths
-      double original_length = bl_array[untranslated_node] - bl_array[untranslated_node-1];
-      randomblength = randomblength - bl_array[untranslated_node-1];
-      double reduce_length =   original_length - randomblength;       
+      double original_length;
+      //if( untranslated_node == 0 ) {        // First link in the chain
+        //original_length = bl_array[untranslated_node];
+        //randomblength = randomblength - bl_array[untranslated_node];
+      //}
+      //else {        
+      {
+        original_length = bl_array[untranslated_node] - bl_array[untranslated_node-1];
+        randomblength = randomblength - bl_array[untranslated_node-1];
+      }
+      double reduce_length =   original_length - randomblength;
       
       // Change length of branch where inserted 
       t_weight[selected_edge][0] = randomblength;
@@ -473,7 +485,7 @@ int main(int argc, char* argv[]) {
       parents[l_n] = i_n;
       
       // Change LCA ARRAY if selected edge is the root i.e STEM CASE
-      if( selected_edge == subtree_root && (ADDoption[random_leaf_index] == STEM || ADDoption[random_leaf_index] == FAM_STEM) ) {
+      if( selected_edge == subtree_root && ( ADDoption[random_leaf_index] == STEM || ADDoption[random_leaf_index] == FAM_STEM) ) {
         lcas[subtree_root] = i_n;
       }
       
@@ -521,6 +533,7 @@ int main(int argc, char* argv[]) {
     TREE_POSTORDER2(k,t) {
 	unsigned int currnode = k.idx;    
 	bl_temp += t_weight[currnode][0]; 
+	//cout<<"\nbranch length "<<t_weight[currnode][0];
     }   
     cout<<"\nThe new total branch length is: "<<bl_temp;
         
@@ -529,7 +542,7 @@ int main(int argc, char* argv[]) {
     ofs<<endl;   
     
     delete[] parents;
-    delete[] leaf_index; 
+    delete[] leaf_index;
     delete[] added_leaf;
   }
  
@@ -542,23 +555,33 @@ int main(int argc, char* argv[]) {
 }  
 
 // Use Binary search to find the branch where the random value fits in
-int binarysearch(double *larray, int size, double key) {
+// BLs is the array of branch lengths
+int binarysearch(double *BLs, int size, double key) {
 
   int first = 0;
-  int last = size-1;
+  int last = size-1, mid;
+  
+  // Only one element
   if(size == 1) {
    return 0;
   }
+  
   while (first <= last) {
-    int mid = (first + last) / 2;  // compute mid point.
-    if (key > larray[mid] && key > larray[mid+1]) 
+  
+    mid = (first + last) / 2;  // compute mid point.
+    //cout<<"\n first = "<<first<<" last = "<<last<<" mid = "<<mid;     
+    if ( key > BLs[mid+1] ) 
       first = mid + 1;  // repeat search in top half.
-    else if (key < larray[mid] && key < larray[mid+1]) 
+    else if ( key < BLs[mid] ) 
       last = mid - 1; // repeat search in bottom half.
-    else{
+    else {
+      //cout<<"RETURNING "<<mid+1<<" key "<<key<<" BLS mid "<<BLs[mid]<<" BLS mid+1 "<<BLs[mid+1]<<" size "<<size;
       return mid+1; // found it. return position 
-    }           
+    }
+          
   }
-  return 0;
+  
+  cout<<"\n\tBS Error ! Exiting ! first = "<<first<<" last = "<<last<<" mid = "<<mid<<" key = "<<key<<" BLS 0 "<<BLs[0]<<" DONE ";
+  exit(1);
   
 }
