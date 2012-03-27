@@ -1,0 +1,106 @@
+ 2TaxA 3TaxB 1 5NTaxC 7NTaxD 8NTaxE 6 4 0
+The number of leaves in the initial tree is 5
+
+Reading in Leaves and LCAs
+ Token 1 Taxa5 Token2 NTaxC Token3 NTaxC Token4 STEM DONE
+STEM
+ Token 1 Taxa6 Token2 RANDOM Token3  Token4  DONE
+RANDOM option
+Number of leaves to be added is 2
+Number of replicates is 5
+
+
+	REPLICATE NUMBER 1
+
+  ADDING Taxa6
+CROWN ADD
+THE CROWN CASE ROOT IS 0
+Randomblength is 1.72092
+Edge : 1 Translated: 3
+((TaxA:1,(TaxB:0.720924,Taxa6:0.720924):0.279076):1,(NTaxC:1,(NTaxD:1,NTaxE:1):1):1):0;
+
+
+  ADDING Taxa5
+STEM ADD
+THE STEM CASE ROOT IS 5
+Randomblength is 0.573721
+Edge : 0 Translated: 5
+((TaxA:1,(TaxB:0.720924,Taxa6:0.720924):0.279076):1,((NTaxD:1,NTaxE:1):1,(NTaxC:0.573721,Taxa5:0.573721):0.426279):1):0;
+
+The new total branch length is: 9.29464
+
+	REPLICATE NUMBER 2
+
+  ADDING Taxa5
+STEM ADD
+THE STEM CASE ROOT IS 5
+Randomblength is 0.580867
+Edge : 0 Translated: 5
+((TaxA:1,TaxB:1):1,((NTaxD:1,NTaxE:1):1,(NTaxC:0.580867,Taxa5:0.580867):0.419133):1);
+
+
+  ADDING Taxa6
+CROWN ADD
+THE CROWN CASE ROOT IS 0
+Randomblength is 5.87009
+Edge : 5 Translated: 6
+((TaxA:1,TaxB:1):1,((NTaxC:0.580867,Taxa5:0.580867):0.419133,((NTaxE:1,NTaxD:1):0.87009,Taxa6:1.87009):0.12991):1):0;
+
+The new total branch length is: 10.451
+
+	REPLICATE NUMBER 3
+
+  ADDING Taxa6
+CROWN ADD
+THE CROWN CASE ROOT IS 0
+Randomblength is 6.70222
+Edge : 6 Translated: 6
+((TaxA:1,TaxB:1):1,(NTaxC:1,((NTaxE:1,NTaxD:1):0.702221,Taxa6:1.70222):0.297779):1):0;
+
+
+  ADDING Taxa5
+STEM ADD
+THE STEM CASE ROOT IS 5
+Randomblength is 0.485001
+Edge : 0 Translated: 5
+((TaxA:1,TaxB:1):1,(((NTaxE:1,NTaxD:1):0.702221,Taxa6:1.70222):0.297779,(NTaxC:0.485001,Taxa5:0.485001):0.514999):1):0;
+
+The new total branch length is: 10.1872
+
+	REPLICATE NUMBER 4
+
+  ADDING Taxa6
+CROWN ADD
+THE CROWN CASE ROOT IS 0
+Randomblength is 7.87573
+Edge : 7 Translated: 4
+((TaxA:1,TaxB:1):1,(((NTaxD:1,NTaxE:1):1,NTaxC:1):0.875731,Taxa6:2.87573):0.124269):0;
+
+
+  ADDING Taxa5
+STEM ADD
+THE STEM CASE ROOT IS 5
+Randomblength is 0.293015
+Edge : 0 Translated: 5
+((TaxA:1,TaxB:1):1,(((NTaxD:1,NTaxE:1):1,(NTaxC:0.293015,Taxa5:0.293015):0.706985):0.875731,Taxa6:2.87573):0.124269):0;
+
+The new total branch length is: 11.1687
+
+	REPLICATE NUMBER 5
+
+  ADDING Taxa5
+STEM ADD
+THE STEM CASE ROOT IS 5
+Randomblength is 0.51379
+Edge : 0 Translated: 5
+((TaxA:1,TaxB:1):1,((NTaxD:1,NTaxE:1):1,(NTaxC:0.51379,Taxa5:0.51379):0.48621):1);
+
+
+  ADDING Taxa6
+CROWN ADD
+THE CROWN CASE ROOT IS 0
+Randomblength is 6.02972
+Edge : 6 Translated: 5
+((TaxA:1,TaxB:1):1,((NTaxD:1,NTaxE:1):1,(Taxa5:0.51379,(NTaxC:0.0297185,Taxa6:0.0297185):0.484071):0.48621):1):0;
+
+The new total branch length is: 8.54351

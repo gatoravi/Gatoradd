@@ -1,4 +1,6 @@
-<<<<<<< HEAD
+
+extern const char *builddate;
+
 /* CROWN MRCA Version 1
  * Written by Avinash using Andre Wehe's tree library Feb 11 2011
  * program to add taxa of a specified family to a phylogenetic tree using the CROWN option.
@@ -8,17 +10,17 @@
      no_of_replicates = number of output replicates desired
      opfile_name = name of output file
  * note: crown  => cannot add leaves which have the same two ancestors  i.e leaf1 anc1 anc1 is not allowed
- */
+*/
  
-=======
+
 /* STEM MRCA Version 1
  * Written by Avinash using Andre Wehe's Library Feb 11 2011
  * program to add taxa of a specified family to a tree .
  * usage - ./executable initial_tree_file leaves_families_file no_of_replicates opfile_name 
  * THE CROWN cannot add leaves which have the same two ancestors for i.e leaf1 anc1 anc1 is not allowed
- */
-extern const char *builddate;
->>>>>>> c00678f46a203f307fa8d0280b4b7d38c47027e7
+*/
+
+
 #include "common.h"
 #include "argument.h"
 #include "tree.h"

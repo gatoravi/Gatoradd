@@ -7,9 +7,9 @@ OUTEXEC=CrownAdd
 
 # Mac OS X
 # MAC_UNIVERSAL=-arch i386 -arch ppc -mmacosx-version-min=10.0
-# cpp=c++ -g -O3 -fomit-frame-pointer -funroll-loops ${MAC_UNIVERSAL}
-# cc=cc -O3 -fomit-frame-pointer -funroll-loops ${MAC_UNIVERSAL}
-# OUTEXEC=reroot_trees.macosx
+ cpp=c++ -g -O3 -fomit-frame-pointer -funroll-loops ${MAC_UNIVERSAL}
+ cc=cc -O3 -fomit-frame-pointer -funroll-loops ${MAC_UNIVERSAL}
+# OUTEXEC=CrownAdd
 
 all: ${OUTEXEC}
 
