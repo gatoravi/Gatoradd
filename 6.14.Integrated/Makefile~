@@ -1,4 +1,3 @@
-#using Andre Wehe's tree library.
 cpp=c++ -g -O0 -ansi -pedantic -Wall -W -Wno-long-long
 #cpp=c++ -O3 -fomit-frame-pointer -funroll-loops -Wno-long-long
 cc=cc -O3 -fomit-frame-pointer -funroll-loops
